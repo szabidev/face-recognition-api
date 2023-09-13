@@ -23,6 +23,9 @@ app.get("/", (req, res) => {
 });
 
 app.post("/signin", (req, res) => {
+  if (!email || !password) {
+    return res.status(400).json("Incorrect form submission");
+  }
   db.select("email", "hash")
     .where("email", "=", req.body.email)
     .from("login")
@@ -46,7 +49,9 @@ app.post("/signin", (req, res) => {
 
 app.post("/register", (req, res) => {
   const { email, name, password } = req.body;
-
+  if (!email || !name || !password) {
+    return res.status(400).json("Incorrect form submission");
+  }
   const salt = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync(password, salt);
 
